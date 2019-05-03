@@ -143,7 +143,7 @@ function setRelayState(device,relayState,callback){//OBJE GONDEREREK ÇALIŞTIRM
 
 var debug=true;
 if (debug) {
-  setRelayState("3c93e4",true,function(result){
+  setRelayState("3c93e4",false,function(result){
     if (result) {
       console.log("relayState mqtt'de değiştirildi");
     }
