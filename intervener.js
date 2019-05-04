@@ -113,7 +113,7 @@ function main(){
       if (callback) {
         for (var i = 0; i < triggers.length; i++) {
           getLastestMeasurement(triggers[i].sourceChipId,triggers[i].sourceType,function(measurement){
-            console.log(measurement);
+            console.log("ölçüm:"+measurement," fromVal:"+ triggers[this.i].fromVal);
             if ((scheduleRunningOn[triggers[this.i].actionChipId]==null || scheduleRunningOn[triggers[this.i].actionChipId]==false) && (activeTriggers[triggers[this.i]._id]==null || activeTriggers[triggers[this.i]._id]==false) && triggers[this.i].fromVal >= measurement) {
               setRelayState(triggers[this.i].actionChipId,true,function(callback){
                 if (callback) {
@@ -133,8 +133,6 @@ function main(){
             if (scheduleRunningOn[triggers[this.i].actionChipId]==true && activeTriggers[triggers[this.i]._id]==true) {
               activeTriggers[triggers[this.i]._id]=false;
             }
-            console.log(triggers[this.i]);
-            console.log(activeTriggers);
           }.bind({i:i}));
         }
       }
@@ -145,6 +143,7 @@ function main(){
           if (schedules[i].repeatable) {
             var todayDayId=moment().day();
             if ((todayDayId==1 && schedules[i].occurOn.monday) || (todayDayId==2 && schedules[i].occurOn.tuesday) || todayDayId==3 && schedules[i].occurOn.wednesday || (todayDayId==4 && schedules[i].occurOn.thursday) || (todayDayId==5 && schedules[i].occurOn.friday) || (todayDayId==6 && schedules[i].occurOn.saturday) || (todayDayId==7 && schedules[i].occurOn.sunday)) {
+
               var rNow=moment();
               var startTime=moment(schedules[i].from);
               startTime.date(rNow.date());
@@ -154,7 +153,7 @@ function main(){
               endTime.date(rNow.date());
               endTime.month(rNow.month());
               endTime.year(rNow.year());
-              if ((activeSchedules[schedules[i]._id]==null || activeSchedules[schedules[i]._id]==false) && startTime.isBefore(rNow)) {
+              if ((activeSchedules[schedules[i]._id]==null || activeSchedules[schedules[i]._id]==false) && (startTime.isBefore(rNow) && rNow.isBefore(endTime))) { //(startTime.isBefore(rNow) && rNow.isBefore(endTime))
                 if (rules[schedules[i].chipId]!=null) {
                   getLastestMeasurement(rules[schedules[i].chipId].sourceChipId,rules[schedules[i].chipId].sourceType,function(measurement){
                     if (measurement>rules[schedules[this.i].chipId].fromVal && measurement<rules[schedules[this.i].chipId].toVal) {
