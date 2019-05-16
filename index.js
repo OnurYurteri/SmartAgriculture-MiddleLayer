@@ -34,6 +34,9 @@ client.on('message', function (topic, message){
       }
     });
     var measureObj=cloneObj(recObj);
+    if (measureObj.type.moisSensor) {
+      measureObj.moisture=1023-measureObj.moisture;
+    }
     delete measureObj.type;
     measureObj.datetime=datetime.create(Date.now());
     insertMeasurement(measureObj);
